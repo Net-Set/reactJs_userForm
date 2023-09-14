@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import Swal from 'sweetalert2';
 import styled from 'styled-components';
 
 const GenderContainerRow = styled.div`
@@ -14,7 +13,7 @@ const SignUpForm = styled.form`
 `;
 
 const PurpleButton = styled.button`
-  background-color: purple; /* Change the button color to purple */
+  background-color: purple;
   color: white;
   border: none;
   padding: 10px 20px;
@@ -25,97 +24,103 @@ const PurpleButton = styled.button`
 
 const PurpleInput = styled.input`
   &:focus {
-    border-color: purple; /* Change the border color to purple when focused */
+    border-color: purple;
   }
-  color: purple; /* Change the font color to purple */
+  color: purple;
 `;
 
 const PurpleTextArea = styled.textarea`
   &:focus {
-    border-color: purple; /* Change the border color to purple when focused */
+    border-color: purple;
   }
-  color: purple; /* Change the font color to purple */
+  color: purple;
 `;
 
 const PurpleLabel = styled.label`
-  color: purple; /* Change the font color to purple */
+  color: purple;
 `;
 
 const Add = ({ employees, setEmployees, setIsAdding }) => {
-  const [Name, setName] = useState('');
-  const [Address, setAddress] = useState('');
-  const [Email, setEmail] = useState('');
-  const [Mobile, setMobile] = useState('');
-  const [Gender, setGender] = useState('Male');
-  const [City, setCity] = useState('');
-  const [PrivacyPolicy, setPrivacyPolicy] = useState(false);
+  const [formData, setFormData] = useState({
+    Name: '',
+    Address: '',
+    Email: '',
+    Mobile: '',
+    Gender: 'Male',
+    City: '',
+    PrivacyPolicy: false,
+  });
+
+  const [message, setMessage] = useState('');
+
+  const handleChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: type === 'checkbox' ? checked : value,
+    }));
+  };
 
   const handleAdd = (e) => {
     e.preventDefault();
 
-    if (!Name || !Address || !Email || !Mobile || !City || !PrivacyPolicy) {
-      return Swal.fire({
-        icon: 'error',
-        title: 'Error!',
-        text: 'Please fill in all required fields and accept the privacy policy.',
-        showConfirmButton: true,
-      });
+    if (
+      !formData.Name ||
+      !formData.Address ||
+      !formData.Email ||
+      !formData.Mobile ||
+      !formData.City ||
+      !formData.PrivacyPolicy
+    ) {
+      setMessage('Please fill in all required fields and accept the privacy policy.');
+      return;
     }
 
     const id = employees.length + 1;
     const newEmployee = {
       id,
-      Name,
-      Address,
-      Email,
-      Mobile,
-      Gender,
-      City,
+      ...formData,
     };
 
-    employees.push(newEmployee);
-    localStorage.setItem('employeesData', JSON.stringify(employees));
-    setEmployees(employees);
+    const updatedEmployees = [...employees, newEmployee];
+    localStorage.setItem('employeesData', JSON.stringify(updatedEmployees));
+    setEmployees(updatedEmployees);
     setIsAdding(false);
 
-    Swal.fire({
-      icon: 'success',
-      title: 'Added!',
-      text: `${Name}'s data has been added.`,
-      showConfirmButton: false,
-      timer: 1500,
-    });
+    setMessage(`${formData.Name}'s data has been added.`);
   };
 
   const handleReset = () => {
-    setName('');
-    setAddress('');
-    setEmail('');
-    setMobile('');
-    setGender('Male');
-    setCity('');
-    setPrivacyPolicy(false);
+    setFormData({
+      Name: '',
+      Address: '',
+      Email: '',
+      Mobile: '',
+      Gender: 'Male',
+      City: '',
+      PrivacyPolicy: false,
+    });
   };
 
   return (
     <div className="small-container">
       <SignUpForm onSubmit={handleAdd}>
-      <h1 style={{ color: 'purple' }}>Registration</h1>
+        <h1 style={{ color: 'purple' }}>Registration</h1>
         <PurpleLabel htmlFor="Name">Name</PurpleLabel>
         <PurpleInput
           id="Name"
           type="text"
           name="Name"
-          value={Name}
-          onChange={(e) => setName(e.target.value)}
+          value={formData.Name}
+          onChange={handleChange}
           required
         />
         <PurpleLabel htmlFor="Address">Address</PurpleLabel>
         <PurpleTextArea
           id="Address"
           name="Address"
-          value={Address}
-          onChange={(e) => setAddress(e.target.value)}
+          value={formData.Address}
+          onChange={handleChange}
           rows={4}
           required
         />
@@ -124,8 +129,8 @@ const Add = ({ employees, setEmployees, setIsAdding }) => {
           id="Email"
           type="email"
           name="Email"
-          value={Email}
-          onChange={(e) => setEmail(e.target.value)}
+          value={formData.Email}
+          onChange={handleChange}
           required
         />
         <PurpleLabel htmlFor="Mobile">Mobile</PurpleLabel>
@@ -133,8 +138,8 @@ const Add = ({ employees, setEmployees, setIsAdding }) => {
           id="Mobile"
           type="text"
           name="Mobile"
-          value={Mobile}
-          onChange={(e) => setMobile(e.target.value)}
+          value={formData.Mobile}
+          onChange={handleChange}
           required
         />
         <PurpleLabel>Gender</PurpleLabel>
@@ -145,10 +150,10 @@ const Add = ({ employees, setEmployees, setIsAdding }) => {
               type="radio"
               name="Gender"
               value="Male"
-              checked={Gender === 'Male'}
-              onChange={() => setGender('Male')}
+              checked={formData.Gender === 'Male'}
+              onChange={handleChange}
               required
-              style={{marginLeft:'5px'}}
+              style={{ marginLeft: '5px' }}
             />
           </PurpleLabel>
           <PurpleLabel>
@@ -157,10 +162,10 @@ const Add = ({ employees, setEmployees, setIsAdding }) => {
               type="radio"
               name="Gender"
               value="Female"
-              checked={Gender === 'Female'}
-              onChange={() => setGender('Female')}
+              checked={formData.Gender === 'Female'}
+              onChange={handleChange}
               required
-              style={{marginLeft:'5px',backgroundClip:'purple'}}
+              style={{ marginLeft: '5px' }}
             />
           </PurpleLabel>
         </GenderContainerRow>
@@ -168,8 +173,8 @@ const Add = ({ employees, setEmployees, setIsAdding }) => {
         <select
           id="City"
           name="City"
-          value={City}
-          onChange={(e) => setCity(e.target.value)}
+          value={formData.City}
+          onChange={handleChange}
           required
         >
           <option value="">Select a city</option>
@@ -188,8 +193,8 @@ const Add = ({ employees, setEmployees, setIsAdding }) => {
           <input
             type="checkbox"
             name="PrivacyPolicy"
-            checked={PrivacyPolicy}
-            onChange={() => setPrivacyPolicy(!PrivacyPolicy)}
+            checked={formData.PrivacyPolicy}
+            onChange={handleChange}
             required
           />{' '}
           I accept the privacy policy
@@ -203,6 +208,10 @@ const Add = ({ employees, setEmployees, setIsAdding }) => {
           >
             RESET
           </PurpleButton>
+          <button type="button" onClick={() => setIsAdding(false)}>
+            Cancel
+          </button>
+          {message && <p style={{ color: 'red' }}>{message}</p>}
         </div>
       </SignUpForm>
     </div>

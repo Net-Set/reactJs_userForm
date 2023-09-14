@@ -40,7 +40,7 @@ const Table = ({ employees, handleEdit, handleDelete }) => {
   return (
     <div className="contain-table">
       <table className="striped-table">
-        <thead>
+      <thead>
           <tr>
             <th onClick={() => requestSort('id')}>
               No.{' '}
@@ -127,7 +127,7 @@ const Table = ({ employees, handleEdit, handleDelete }) => {
       </table>
 
       {/* Pagination */}
-      {/* <div className="pagination">
+      <div className="pagination">
         {Array.from({ length: Math.ceil(sortedEmployees.length / ITEMS_PER_PAGE) }).map((_, index) => (
           <button
             key={index}
@@ -137,7 +137,7 @@ const Table = ({ employees, handleEdit, handleDelete }) => {
             {index + 1}
           </button>
         ))}
-      </div> */}
+      </div>
     </div>
   );
 };
