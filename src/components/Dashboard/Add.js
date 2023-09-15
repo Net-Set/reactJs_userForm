@@ -68,7 +68,7 @@ const PurpleLabel = styled.label`
   margin:0px;
 `;
 
-const Add = ({ employees, setEmployees, setIsAdding }) => {
+const Add = ({ employees, setEmployees, setIsAdding, closeModel, handleAddSubmit }) => {
   const [formData, setFormData] = useState({
     Name: '',
     Address: '',
@@ -88,7 +88,9 @@ const Add = ({ employees, setEmployees, setIsAdding }) => {
       [name]: type === 'checkbox' ? checked : value,
     }));
   };
-
+  const handleClose = () => {
+    setIsAdding(false); // This function should close the modal.
+  };
   const handleAdd = (e) => {
     e.preventDefault();
 
@@ -104,7 +106,7 @@ const Add = ({ employees, setEmployees, setIsAdding }) => {
       return;
     }
 
-    const id = employees.length + 1;
+    const id = employees.length + 2;
     const newEmployee = {
       id,
       ...formData,
@@ -116,6 +118,7 @@ const Add = ({ employees, setEmployees, setIsAdding }) => {
     setIsAdding(false);
 
     setMessage(`${formData.Name}'s data has been added.`);
+    closeModel();
   };
 
   const handleReset = () => {
@@ -134,7 +137,7 @@ const Add = ({ employees, setEmployees, setIsAdding }) => {
     <PopupBackground>
       <PopupContainer>
         <SignUpForm onSubmit={handleAdd}>
-          <h4 style={{ color: 'purple', textAlign: 'center', margin:'0px' }}>Registration</h4>
+          <h4 style={{ color: 'purple', textAlign: 'center', margin: '0px' }}>Registration</h4>
           <PurpleLabel htmlFor="Name">Name</PurpleLabel>
           <PurpleInput
             id="Name"
@@ -229,7 +232,7 @@ const Add = ({ employees, setEmployees, setIsAdding }) => {
             I accept the privacy policy
           </PurpleLabel>
           <div style={{ marginTop: '30px', textAlign: 'center' }}>
-            <PurpleButton type="submit">SIGN UP</PurpleButton>
+            <PurpleButton type="submit" onClick={handleAddSubmit}>SIGN UP</PurpleButton>
             <PurpleButton
               type="button"
               className="muted-button"
@@ -237,9 +240,11 @@ const Add = ({ employees, setEmployees, setIsAdding }) => {
             >
               RESET
             </PurpleButton>
-            <button type="button" onClick={() => setIsAdding(false)}>
-              Close
-            </button>
+            <PurpleButton type="button" onClick={closeModel}>
+            CLOSE
+          </PurpleButton>
+
+
             {message && <p style={{ color: 'red' }}>{message}</p>}
           </div>
         </SignUpForm>

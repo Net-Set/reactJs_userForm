@@ -1,14 +1,25 @@
 import React, { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSort, faSortUp, faSortDown, faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
-
+import TablePagination from '@mui/material/TablePagination';
+import Edit from './Edit';
 const Table = ({ employees, handleEdit, handleDelete }) => {
-  const ITEMS_PER_PAGE = 10; // Number of items to display per page
+  const [isAddModalOpen, setIsAddModalOpen] = React.useState(false); // Define isAddModalOpen and its setter
 
   const [sortConfig, setSortConfig] = useState({ key: null, direction: 'ascending' });
-  const [currentPage, setCurrentPage] = useState(1);
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
 
-  // Sort and paginate the employees
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
+
+  const ITEMS_PER_PAGE = 10;
   const sortedEmployees = [...employees];
 
   if (sortConfig.key) {
@@ -21,6 +32,11 @@ const Table = ({ employees, handleEdit, handleDelete }) => {
       return 0;
     });
   }
+
+  const indexOfLastEmployee = (page + 1) * rowsPerPage;
+  const indexOfFirstEmployee = indexOfLastEmployee - rowsPerPage;
+  const currentEmployees = sortedEmployees.slice(indexOfFirstEmployee, indexOfLastEmployee);
+
   const requestSort = (key) => {
     let direction = 'ascending';
     if (sortConfig.key === key && sortConfig.direction === 'ascending') {
@@ -28,19 +44,25 @@ const Table = ({ employees, handleEdit, handleDelete }) => {
     }
     setSortConfig({ key, direction });
   };
-  const indexOfLastEmployee = currentPage * ITEMS_PER_PAGE;
-  const indexOfFirstEmployee = indexOfLastEmployee - ITEMS_PER_PAGE;
-  const currentEmployees = sortedEmployees.slice(indexOfFirstEmployee, indexOfLastEmployee);
-
-  // Handle page change
-  const paginate = (pageNumber) => {
-    setCurrentPage(pageNumber);
-  };
-
+    // Define the functions
+    const openAddModal = () => {
+      setIsAddModalOpen(true);
+    };
+  
+    const closeModel = () => {
+      setIsAddModalOpen(false); // Use setIsAddModalOpen to close the modal.
+    };
+  
+    const handleAddSubmit = (formData) => {
+      // Handle the submission logic here
+      // You can access the submitted data in the 'data' parameter
+      console.log('Form Data Submitted:', formData);
+  
+    };
   return (
     <div className="contain-table">
       <table className="striped-table">
-      <thead>
+        <thead>
           <tr>
             <th onClick={() => requestSort('id')}>
               No.{' '}
@@ -104,42 +126,44 @@ const Table = ({ employees, handleEdit, handleDelete }) => {
                   <button
                     onClick={() => handleEdit(employee.id)}
                     className="button muted-button"
-                    style={{border:'none'}}
+                    style={{ border: 'none' }}
                   >
-                    <FontAwesomeIcon icon={faEdit} style={{ color: '#0366ee' }}  />
+                    <FontAwesomeIcon icon={faEdit} style={{ color: '#0366ee' }} onClick={openAddModal} />
+                  
+          {isAddModalOpen && (
+            <Edit isOpen={isAddModalOpen} closeModel={closeModel} onSubmit={handleAddSubmit} />
+          )}
+
                   </button>
                 </td>
                 <td className="text-left">
                   <button
                     onClick={() => handleDelete(employee.id)}
                     className="button muted-button"
-                     style={{border:'none'}}
+                    style={{ border: 'none' }}
                   >
-                    <FontAwesomeIcon icon={faTrash} style={{ color: 'red' }}  />
+                    <FontAwesomeIcon icon={faTrash} style={{ color: 'red' }} />
                   </button>
                 </td>
               </tr>
             ))
           ) : (
             <tr>
-              <td colSpan={7}>No Employees</td>
+              <td colSpan={8}>No Employees</td>
             </tr>
           )}
         </tbody>
       </table>
 
-      {/* Pagination */}
-      <div className="pagination">
-        {Array.from({ length: Math.ceil(sortedEmployees.length / ITEMS_PER_PAGE) }).map((_, index) => (
-          <button
-            key={index}
-            className={`pagination-button ${currentPage === index + 1 ? 'active' : ''}`}
-            onClick={() => paginate(index + 1)}
-          >
-            {index + 1}
-          </button>
-        ))}
-      </div>
+      <TablePagination
+        
+        component="div"
+        count={employees.length}
+        page={page}
+        onPageChange={handleChangePage}
+        rowsPerPage={rowsPerPage}
+        onRowsPerPageChange={handleChangeRowsPerPage}
+      />
     </div>
   );
 };

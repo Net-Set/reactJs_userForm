@@ -1,91 +1,129 @@
-import React, { useState } from 'react';
+import * as React from 'react';
+import { styled, alpha } from '@mui/material/styles';
+import AppBar from '@mui/material/AppBar';
+import Box from '@mui/material/Box';
+import Toolbar from '@mui/material/Toolbar';
+import IconButton from '@mui/material/IconButton';
+import Typography from '@mui/material/Typography';
+import InputBase from '@mui/material/InputBase';
+import SearchIcon from '@mui/icons-material/Search';
+import { faUserPlus, faUsers } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSearch, faUserPlus, faUsers  } from '@fortawesome/free-solid-svg-icons';
-import styled from 'styled-components';
-import { FaUser } from 'react-icons/fa';
-import Logout from '../Logout';
+import Add from './Add';
 
-const Header = ({ setIsAdding, setIsAuthenticated }) => {
-  const [searchTerm, setSearchTerm] = useState('');
+const Search = styled('div')(({ theme }) => ({
+  position: 'relative',
+  width: '200px',
+  borderRadius: theme.shape.borderRadius,
+  backgroundColor: alpha(theme.palette.common.white, 0.15),
+  '&:hover': {
+    backgroundColor: alpha(theme.palette.common.white, 0.25),
+  },
+  marginLeft: 0,
+  width: '100%',
+  [theme.breakpoints.up('sm')]: {
+    marginLeft: theme.spacing(1),
+    width: 'auto',
+  },
+  border: '1px solid #4d4d4d',
+}));
 
-  const handleSearchInputChange = (event) => {
-    setSearchTerm(event.target.value);
-  };
+const SearchIconWrapper = styled('div')(({ theme }) => ({
+  padding: theme.spacing(0, 2),
+  height: '100%',
+  position: 'absolute',
+  pointerEvents: 'none',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+}));
 
-  const handleSearchClick = () => {
-    console.log('Searching for:', searchTerm);
-  };
+const StyledInputBase = styled(InputBase)(({ theme }) => ({
+  color: 'inherit',
+  '& .MuiInputBase-input': {
+    padding: theme.spacing(1, 1, 1, 0),
+    // vertical padding + font size from searchIcon
+    paddingLeft: `calc(1em + ${theme.spacing(4)})`,
+    transition: theme.transitions.create('width'),
+    width: '100%',
+    [theme.breakpoints.up('sm')]: {
+      width: '12ch',
+      '&:focus': {
+        width: '20ch',
+      },
+    },
+  },
+}));
+
+export default function SearchAppBar({ employees, setEmployees,
+  setIsAdding }) {
+  const [isAddModalOpen, setIsAddModalOpen] = React.useState(false); // Define isAddModalOpen and its setter
+
   const iconStyle = {
-    color: '#0366ee', // Set the color to blue
+    color: '#0366ee',
+    fontSize: '30px',
+    marginLeft: '30px',
+    border: 'none',
+    background: 'white', // Remove the blue background color
   };
-  
+
+  // Define the functions
+  const openAddModal = () => {
+    setIsAddModalOpen(true);
+  };
+
+  const closeModel = () => {
+    setIsAddModalOpen(false); // Use setIsAddModalOpen to close the modal.
+  };
+
+  const handleAddSubmit = (formData) => {
+    // Handle the submission logic here
+    // You can access the submitted data in the 'data' parameter
+    console.log('Form Data Submitted:', formData);
+
+  };
   return (
-    <HeaderContainer>
-      <HeaderContents>
-        <h1>
-        <FontAwesomeIcon icon={faUsers } style={iconStyle} />  User Details
-        </h1>
-        <HeaderContent>
-          <SearchBar>
-            <input
-              type="text"
-              placeholder="Search..."
-              value={searchTerm}
-              onChange={handleSearchInputChange}
+    <Box sx={{ flexGrow: 1 }} style={{ backgroundColor: 'white', marginTop: '10px', marginBottom: '20px' }}>
+      <AppBar position="static" style={{ backgroundColor: 'white', boxShadow: 'none' }}>
+        <Toolbar>
+          <IconButton
+            size="large"
+            edge="start"
+            color="inherit"
+            aria-label="open drawer"
+            sx={{ mr: 2 }}
+            style={{ border: 'none', backgroundClip: 'none' }}
+          >
+            <FontAwesomeIcon icon={faUsers} style={iconStyle} />
+          </IconButton>
+          <Typography
+            variant="h6"
+            noWrap
+            component="div"
+            sx={{ flexGrow: 1, display: { xs: 'none', sm: 'block' } }}
+            style={{ color: '#333' }}
+          >
+            <h3>User Details</h3>
+          </Typography>
+          <Search style={{ border: '1px solid  #4d4d4d', width: '250px' }}>
+            <SearchIconWrapper>
+              <SearchIcon style={{ color: '#222' }} />
+            </SearchIconWrapper>
+            <StyledInputBase
+              style={{ color: '#222', width: '100%' }}
+              placeholder="Search here…"
+              inputProps={{ 'aria-label': 'search' }}
             />
-            <SearchButton onClick={handleSearchClick}>
-              <FontAwesomeIcon icon={faSearch} />
-            </SearchButton>
-          </SearchBar>
-          <ActionButton onClick={() => setIsAdding(true)} style={{backgroundColor:'white',border:'none'}}>
-            <FontAwesomeIcon icon={faUserPlus}  style={{color:'0366ee',fontSize:'29px'}}/> 
+          </Search>
+          <FontAwesomeIcon icon={faUserPlus} style={iconStyle} onClick={openAddModal} />
+          {isAddModalOpen && (
+            <Add isOpen={isAddModalOpen} employees={employees}   setEmployees={setEmployees}
+            setIsAdding={setIsAdding}closeModel={closeModel} onSubmit={handleAddSubmit} />
 
-          </ActionButton>
-        </HeaderContent>
-      </HeaderContents>
-      {/* <Logout setIsAuthenticated={setIsAuthenticated} /> */}
-    </HeaderContainer>
+          )}
+
+        </Toolbar>
+      </AppBar>
+    </Box>
   );
-};
-
-export default Header;
-
-const HeaderContainer = styled.header`
-  /* Add any global header styles here */
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 10px; /* Add padding for spacing */
-`;
-
-const HeaderContents = styled.div`
-  display: flex;
-  align-items: center;
-`;
-
-const HeaderContent = styled.div`
-  display: flex;
-  justify-content: flex-end; /* Align content to the right */
-  align-items: center;
-`;
-
-const SearchBar = styled.div`
-  display: flex;
-  border-radius: 4px;
-  margin-left:500px;
-  justify-content: flex-end; /* Align the search bar to the right */
-  align-items: center;
-`;
-
-const SearchButton = styled.button`
-  border: none;
-  background: black;
-  cursor: pointer;
-  padding: 11px;
-  margin-right:5px;
-  color: white; /* Add text color */
-`;
-
-const ActionButton = styled.button`
-  /* Define styles for the action button as needed */
-`;
+}
