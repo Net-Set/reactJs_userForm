@@ -104,16 +104,18 @@ const Table = ({ employees, handleEdit, handleDelete }) => {
                   <button
                     onClick={() => handleEdit(employee.id)}
                     className="button muted-button"
+                    style={{border:'none'}}
                   >
-                    <FontAwesomeIcon icon={faEdit} />
+                    <FontAwesomeIcon icon={faEdit} style={{ color: '#0366ee' }}  />
                   </button>
                 </td>
                 <td className="text-left">
                   <button
                     onClick={() => handleDelete(employee.id)}
                     className="button muted-button"
+                     style={{border:'none'}}
                   >
-                    <FontAwesomeIcon icon={faTrash} />
+                    <FontAwesomeIcon icon={faTrash} style={{ color: 'red' }}  />
                   </button>
                 </td>
               </tr>

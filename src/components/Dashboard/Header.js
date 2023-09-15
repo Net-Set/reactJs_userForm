@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSearch, faUserPlus } from '@fortawesome/free-solid-svg-icons';
+import { faSearch, faUserPlus, faUsers  } from '@fortawesome/free-solid-svg-icons';
 import styled from 'styled-components';
 import { FaUser } from 'react-icons/fa';
 import Logout from '../Logout';
@@ -15,12 +15,15 @@ const Header = ({ setIsAdding, setIsAuthenticated }) => {
   const handleSearchClick = () => {
     console.log('Searching for:', searchTerm);
   };
-
+  const iconStyle = {
+    color: '#0366ee', // Set the color to blue
+  };
+  
   return (
     <HeaderContainer>
       <HeaderContents>
         <h1>
-          <FaUser /> User Details
+        <FontAwesomeIcon icon={faUsers } style={iconStyle} />  User Details
         </h1>
         <HeaderContent>
           <SearchBar>
@@ -34,8 +37,9 @@ const Header = ({ setIsAdding, setIsAuthenticated }) => {
               <FontAwesomeIcon icon={faSearch} />
             </SearchButton>
           </SearchBar>
-          <ActionButton onClick={() => setIsAdding(true)}>
-            <FontAwesomeIcon icon={faUserPlus} /> Add Employee
+          <ActionButton onClick={() => setIsAdding(true)} style={{backgroundColor:'white',border:'none'}}>
+            <FontAwesomeIcon icon={faUserPlus}  style={{color:'0366ee',fontSize:'29px'}}/> 
+
           </ActionButton>
         </HeaderContent>
       </HeaderContents>
@@ -68,7 +72,7 @@ const HeaderContent = styled.div`
 const SearchBar = styled.div`
   display: flex;
   border-radius: 4px;
-  margin-left:450px;
+  margin-left:500px;
   justify-content: flex-end; /* Align the search bar to the right */
   align-items: center;
 `;
