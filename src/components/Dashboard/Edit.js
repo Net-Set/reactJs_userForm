@@ -7,10 +7,13 @@ const PurpleInput = styled.input`
     border-color: purple; /* Change the border color to purple when focused */
   }
   color: purple; /* Change the font color to purple */
-`;
+  margin:0px;
+  height:30px;
+  `;
 
 const PurpleLabel = styled.label`
   color: purple; /* Change the font color to purple */
+  margin:0px;
 `;
 
 const PurpleButton = styled.input`
@@ -33,6 +36,29 @@ const GenderContainerRow = styled.div`
   display: flex;
   gap: 10px;
   color: purple; /* Change the font color to purple */
+`;
+
+const PopupBackground = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+`;
+
+const PopupContainer = styled.div`
+  background: white;
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+  width: 90%;
+  height:85%;
+  max-width: 400px; /* Adjust the max-width as needed for your design */
 `;
 
 const Edit = ({ employees, selectedEmployee, setEmployees, setIsEditing }) => {
@@ -83,100 +109,102 @@ const Edit = ({ employees, selectedEmployee, setEmployees, setIsEditing }) => {
   };
 
   return (
-    <div className="small-container">
-      <form onSubmit={handleUpdate}>
-        <h1 style={{ color: 'purple' }}>User Update</h1>
-        <PurpleLabel htmlFor="Name">Name</PurpleLabel>
-        <PurpleInput
-          id="Name"
-          type="text"
-          name="Name"
-          value={Name}
-          onChange={(e) => setName(e.target.value)}
-        />
-        <PurpleLabel htmlFor="Address">Address</PurpleLabel>
-        <PurpleInput
-          id="Address"
-          type="text"
-          name="Address"
-          value={Address}
-          onChange={(e) => setAddress(e.target.value)}
-        />
-        <PurpleLabel htmlFor="Email">Email</PurpleLabel>
-        <PurpleInput
-          id="Email"
-          type="email"
-          name="Email"
-          value={Email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
-        <PurpleLabel htmlFor="Mobile">Mobile</PurpleLabel>
-        <PurpleInput
-          id="Mobile"
-          type="text"
-          name="Mobile"
-          value={Mobile}
-          onChange={(e) => setMobile(e.target.value)}
-        />
-        
-        <PurpleLabel>Gender</PurpleLabel>
-        <GenderContainerRow>
-          <PurpleRadioLabel>
-            Male
-            <input
-              type="radio"
-              name="Gender"
-              value="Male"
-              checked={Gender === 'Male'}
-              onChange={() => setGender('Male')}
-              required
-            />
-          </PurpleRadioLabel>
-          <PurpleRadioLabel>
-            Female
-            <input
-              type="radio"
-              name="Gender"
-              value="Female"
-              checked={Gender === 'Female'}
-              onChange={() => setGender('Female')}
-              required
-            />
-          </PurpleRadioLabel>
-        </GenderContainerRow>
-        
-        <PurpleLabel htmlFor="City">City</PurpleLabel>
-        <select
-          id="City"
-          name="City"
-          value={City}
-          onChange={(e) => setCity(e.target.value)}
-          required
-        >
-          <option value="">Select a city</option>
-          <option value="New York">New York</option>
-          <option value="Los Angeles">Los Angeles</option>
-          <option value="Chicago">Chicago</option>
-          <option value="Houston">Houston</option>
-          <option value="Miami">Miami</option>
-          <option value="San Francisco">San Francisco</option>
-          <option value="Dallas">Dallas</option>
-          <option value="Boston">Boston</option>
-          <option value="Seattle">Seattle</option>
-          <option value="Atlanta">Atlanta</option>
-        </select>
-        <div style={{ marginTop: '30px' }}>
-          <PurpleButton type="submit" value="Update" />
-          <PurpleButton
-            style={{ marginLeft: '12px' }}
-            className="muted-button"
-            type="button"
-            value="Cancel"
-            onClick={() => setIsEditing(false)}
+    <PopupBackground>
+      <PopupContainer>
+        <form onSubmit={handleUpdate}>
+          <h3 style={{ color: 'purple',margin:'0px' }}>User Update</h3>
+          <PurpleLabel htmlFor="Name">Name</PurpleLabel>
+          <PurpleInput
+            id="Name"
+            type="text"
+            name="Name"
+            value={Name}
+            onChange={(e) => setName(e.target.value)}
           />
-        </div>
-      </form>
-    </div>
+          <PurpleLabel htmlFor="Address">Address</PurpleLabel>
+          <PurpleInput
+            id="Address"
+            type="text"
+            name="Address"
+            value={Address}
+            onChange={(e) => setAddress(e.target.value)}
+          />
+          <PurpleLabel htmlFor="Email">Email</PurpleLabel>
+          <PurpleInput
+            id="Email"
+            type="email"
+            name="Email"
+            value={Email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+          <PurpleLabel htmlFor="Mobile">Mobile</PurpleLabel>
+          <PurpleInput
+            id="Mobile"
+            type="text"
+            name="Mobile"
+            value={Mobile}
+            onChange={(e) => setMobile(e.target.value)}
+          />
+        
+          <PurpleLabel>Gender</PurpleLabel>
+          <GenderContainerRow>
+            <PurpleRadioLabel>
+              Male
+              <input
+                type="radio"
+                name="Gender"
+                value="Male"
+                checked={Gender === 'Male'}
+                onChange={() => setGender('Male')}
+                required
+              />
+            </PurpleRadioLabel>
+            <PurpleRadioLabel>
+              Female
+              <input
+                type="radio"
+                name="Gender"
+                value="Female"
+                checked={Gender === 'Female'}
+                onChange={() => setGender('Female')}
+                required
+              />
+            </PurpleRadioLabel>
+          </GenderContainerRow>
+        
+          <PurpleLabel htmlFor="City">City</PurpleLabel>
+          <select
+            id="City"
+            name="City"
+            value={City}
+            onChange={(e) => setCity(e.target.value)}
+            required
+          >
+            <option value="">Select a city</option>
+            <option value="New York">New York</option>
+            <option value="Los Angeles">Los Angeles</option>
+            <option value="Chicago">Chicago</option>
+            <option value="Houston">Houston</option>
+            <option value="Miami">Miami</option>
+            <option value="San Francisco">San Francisco</option>
+            <option value="Dallas">Dallas</option>
+            <option value="Boston">Boston</option>
+            <option value="Seattle">Seattle</option>
+            <option value="Atlanta">Atlanta</option>
+          </select>
+          <div style={{ marginTop: '30px', textAlign: 'center' }}>
+            <PurpleButton type="submit" value="Update" />
+            <PurpleButton
+              style={{ marginLeft: '12px' }}
+              className="muted-button"
+              type="button"
+              value="Cancel"
+              onClick={() => setIsEditing(false)}
+            />
+          </div>
+        </form>
+      </PopupContainer>
+    </PopupBackground>
   );
 };
 
